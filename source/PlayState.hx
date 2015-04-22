@@ -10,6 +10,8 @@ import flixel.ui.FlxButton;
 import flixel.util.FlxMath;
 import flixel.util.FlxPoint;
 import flixel.addons.editors.ogmo.FlxOgmoLoader;
+import sys.io.File;
+import haxe.Json;
 
 // FlxState for the actual gameplay
 class PlayState extends FlxState {
@@ -19,10 +21,7 @@ class PlayState extends FlxState {
 	var terrain: FlxTilemap;
 	private var last:FlxPoint = new FlxPoint();
 	
-	var animatedTiles = [
-		[18, 19, 20],
-		[21, 22, 23]
-	];
+	var animatedTiles : Array<Array<Int>>;
 	
 	// Called when the state is created
 	override public function create():Void {
@@ -33,12 +32,7 @@ class PlayState extends FlxState {
 		add(terrain);
 		map.loadEntities( entityPlacer, "entities" );
 		
-		
-		text = new FlxText( 100, 100, 0, "This is how The Font should LOOK!" );
-		text.setFormat("assets/fonts/RiskofRainFont.ttf", 8, 0xFFFFFF);
-		text.antialiasing = false;
-		text.pixelPerfectRender = true;
-		//add( text );
+		animatedTiles = Json.parse( File.getContent("assets/data/terraindata.json") ).animatedframes;
 		
 	}
 	

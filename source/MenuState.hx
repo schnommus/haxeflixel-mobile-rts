@@ -15,23 +15,24 @@ class MenuState extends FlxState {
 		super.create();
 		
 		// Game title
-		var title = new FlxText( 0, 0, 0, "TEMPLATE\nAPP" );
-		title.setFormat("assets/fonts/BebasNeue.otf", 70, 0xFFFFFF, "center");
-		title.setPosition( FlxG.width / 2 - title.textField.textWidth / 2, FlxG.height / 2-180 );
+		var title = new FlxSprite( 0, 0, "assets/images/exocritical.png" );
+		title.scale.set(8, 8);
+		title.x = FlxG.width / 2-20;
+		title.y = 30;
 		add(title);
 		
 		// Copyright notice
 		var copyright = new FlxText( 0, 0, 0, "(C) Sebastian Holzapfel, 2015" );
-		copyright.setFormat("assets/fonts/BebasNeue.otf", 15, 0xFFFFFF, "center");
+		copyright.setFormat("assets/fonts/RiskofRainFont.ttf", 8, 0xFFFFFF, "center");
 		copyright.setPosition( FlxG.width / 2 - copyright.textField.textWidth / 2, FlxG.height - 20 );
 		add(copyright);
 		
 		// 'Begin' button
 		function beginClicked() { FlxG.switchState(new PlayState()); }
-		var begin = new FlxButton(FlxG.width/2-75, FlxG.height/2+10, "BEGIN", beginClicked);
+		var begin = new FlxButton(FlxG.width/2-75, FlxG.height/2-20, "BEGIN", beginClicked);
 		begin.loadGraphic("assets/images/button.png");
-		begin.label.setFormat("assets/fonts/BebasNeue.otf", 30, 0xFFFFFF);
-		begin.label.offset.x -= (150-begin.label.textField.textWidth)/2-3;
+		begin.label.setFormat("assets/fonts/RiskofRainFont.ttf", 32, 0xFFFFFF);
+		begin.label.offset.x -= (150-begin.label.textField.textWidth)/2+2;
 		begin.label.offset.y -= 10;
 		add(begin);
 		
