@@ -1,6 +1,7 @@
 package;
 
 import Std;
+import flixel.FlxObject;
 import flixel.group.FlxGroup;
 import flixel.FlxG;
 import flixel.FlxSprite;
@@ -13,12 +14,13 @@ import flixel.util.FlxPoint;
 import flixel.addons.editors.ogmo.FlxOgmoLoader;
 import sys.io.File;
 import haxe.Json;
+import Entities;
 
 
 class LevelManager extends FlxGroup {
 
 	private var map: FlxOgmoLoader;
-	private var terrain: FlxTilemap;
+	public var terrain: FlxTilemap;
 	
 	private var animatedTiles : Array<Array<Int>>;
 	private var tileAnimationElapsed = 0.0;
@@ -29,6 +31,9 @@ class LevelManager extends FlxGroup {
 		map = new FlxOgmoLoader( "assets/data/awesomelevel.oel" );
 		
 		terrain = map.loadTilemap( "assets/images/terrain.png", 16, 16, "landscape" );
+		for( i in 1...17 ) {
+			terrain.setTileProperties( i, FlxObject.NONE );
+		}
 		add(terrain);
 		
 		map.loadEntities( entityPlacer, "entities" );
@@ -46,9 +51,11 @@ class LevelManager extends FlxGroup {
 		var image:String = null;
 		
 		switch( name ) {
-			case "cactus": image = "assets/images/cactus.png";
+			case "cactus":
+				add( new Cactus( Std.parseFloat(data.get("x")), Std.parseFloat(data.get("y")) ) );
 			case "succulent": image = "assets/images/succulent.png";
-			case "palmtree": image = "assets/images/palmtree.png";
+			case "palmtree": 
+				add( new PalmTree( Std.parseFloat(data.get("x")), Std.parseFloat(data.get("y")) ) );
 		}
 		
 		if( image != null ) {
