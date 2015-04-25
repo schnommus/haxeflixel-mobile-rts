@@ -16,18 +16,20 @@ import haxe.Json;
 // FlxState for the actual gameplay
 class PlayState extends FlxState {
 	
-	private var levelManager : LevelManager;
+	public static var levelManager : LevelManager;
 	private var cameraController : CameraController;
+	private var selectionSystem : SelectionSystem;
 	
 	// Called when the state is created
 	override public function create():Void {
 		super.create();
 		
 		levelManager = new LevelManager();
-		add(levelManager);
-		
 		cameraController = new CameraController();
+		selectionSystem = new SelectionSystem();
+		add(levelManager);
 		add(cameraController);
+		add(selectionSystem);
 	}
 	
 	// Called when the state is destroyed.
