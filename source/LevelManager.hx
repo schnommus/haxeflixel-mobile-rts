@@ -14,6 +14,7 @@ import flixel.util.FlxPoint;
 import flixel.addons.editors.ogmo.FlxOgmoLoader;
 import sys.io.File;
 import haxe.Json;
+import openfl.Assets;
 import Entities;
 
 
@@ -38,7 +39,7 @@ class LevelManager extends FlxGroup {
 		
 		map.loadEntities( entityPlacer, "entities" );
 		
-		animatedTiles = Json.parse( File.getContent("assets/data/terraindata.json") ).animatedframes;
+		animatedTiles = Json.parse( Assets.getText("assets/data/terraindata.json") ).animatedframes;
 	}
 	
 	override public function update() {
