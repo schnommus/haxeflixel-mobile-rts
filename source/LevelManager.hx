@@ -54,7 +54,8 @@ class LevelManager extends FlxGroup {
 		switch( name ) {
 			case "cactus":
 				add( new Cactus( Std.parseFloat(data.get("x")), Std.parseFloat(data.get("y")) ) );
-			case "succulent": image = "assets/images/succulent.png";
+			case "succulent": //image = "assets/images/succulent.png";
+				add( new Orb( Std.parseFloat(data.get("x")), Std.parseFloat(data.get("y")) ) );
 			case "palmtree": 
 				add( new PalmTree( Std.parseFloat(data.get("x")), Std.parseFloat(data.get("y")) ) );
 		}
