@@ -12,6 +12,7 @@ import flixel.util.FlxPoint;
 import flixel.addons.editors.ogmo.FlxOgmoLoader;
 import sys.io.File;
 import haxe.Json;
+import flixel.FlxCamera;
 
 // FlxState for the actual gameplay
 class PlayState extends FlxState {

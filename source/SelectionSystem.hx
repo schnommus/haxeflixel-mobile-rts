@@ -51,8 +51,9 @@ class SelectableEntity extends FlxSprite {
 		super.draw();
 	}
 	
-	public function moveCommand( destination: FlxPoint ) {
+	public function moveCommand( destination: FlxPoint ) : Bool {
 		trace( '$name moving to $destination' );
+		return false;
 	}
 	
 	public function attackCommand( target: SelectableEntity ) {
@@ -165,6 +166,7 @@ class SelectionSystem extends FlxGroup {
 		} );
 		
 		if ( count < 1 ) {
+			var success = false;
 			for ( ent in selectedEntities ) {
 				var target : SelectableEntity = null;
 				PlayState.levelManager.forEachOfType( SelectableEntity, function(ent) {
@@ -175,12 +177,14 @@ class SelectionSystem extends FlxGroup {
 					}
 				} );
 
-				ent.moveCommand( touchPosition );
-				
+				success = success || ent.moveCommand( touchPosition );
+				 
 				if ( target != null )
 					ent.attackCommand( target );
 			}
-			wipeselection();
+
+			if( success )
+				wipeselection();
 		}
 	}
 	

@@ -16,9 +16,11 @@ import sys.io.File;
 import haxe.Json;
 import openfl.Assets;
 import Entities;
+import flixel.util.FlxSort;
+import flixel.group.FlxTypedGroup;
 
 
-class LevelManager extends FlxGroup {
+class LevelManager extends FlxTypedGroup<FlxObject> {
 
 	private var map: FlxOgmoLoader;
 	public var terrain: FlxTilemap;
@@ -44,6 +46,8 @@ class LevelManager extends FlxGroup {
 	
 	override public function update() {
 		super.update();
+		
+		super.sort( FlxSort.byY  );
 
 		animateTiles();
 	}
