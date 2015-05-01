@@ -1,9 +1,40 @@
 package;
 
+import flixel.FlxSprite;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxPoint;
 import flixel.util.FlxMath;
 import SelectionSystem;
+import PlayState;
+import LevelManager;
+import flixel.tweens.FlxEase;
+
+class MovementArrow extends FlxSprite {
+	
+	var tweener: FlxTween;
+	
+	public function new( x: Float, y: Float ) {
+		var dest = new FlxPoint(x-8, y-8);
+		super(x-8, y-200);
+		loadGraphic("assets/images/moveArrow.png", true, 16, 16);
+		animation.add("d", [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], 15, false);
+		
+		tweener = FlxTween.tween( this, { x: dest.x, y: dest.y }, 0.5, {ease: FlxEase.cubeOut});
+	}
+	
+	override public function update() {
+		super.update();
+		
+		if ( tweener != null && tweener.finished ) {
+			animation.play("d");
+			tweener = null;
+		}
+		
+		if ( tweener == null && animation.finished ) {
+			this.kill();
+		}
+	}
+}
 
 class MoveableEntity extends SelectableEntity {
 	var pathPoints: Array<FlxPoint> = [];
@@ -11,7 +42,9 @@ class MoveableEntity extends SelectableEntity {
 	public var currentDirection:Int = 0;
 	public var moving: Bool = false;
 	
-	override public function moveCommand( destination: FlxPoint ) {
+	override public function moveCommand( destination: FlxPoint ) : Bool {
+		PlayState.levelManager.add( new MovementArrow( destination.x, destination.y ) );
+		
 		destination.x -= selectionOffset.x+8;
 		destination.y -= selectionOffset.y-3;
 		pathPoints = PlayState.levelManager.terrain.findPath( new FlxPoint(x, y), destination, false );
@@ -23,6 +56,7 @@ class MoveableEntity extends SelectableEntity {
 			pathPoints = [];
 			//pathPoints = PlayState.levelManager.terrain.findPath( new FlxPoint(x, y+8), destination, false );
 		}
+		return pathPoints.length != 0;
 	}
 	
 	override public function update() {
