@@ -14,6 +14,7 @@ import flixel.addons.editors.ogmo.FlxOgmoLoader;
 import sys.io.File;
 import haxe.Json;
 import flixel.input.touch.FlxTouch;
+import flixel.util.FlxColor;
 
 class SelectableEntity extends FlxSprite {
 
@@ -66,16 +67,37 @@ class SelectionSystem extends FlxGroup {
 	private var selectedEntities : Array<SelectableEntity> = [];
 	
 	private var touchDownPoint = new FlxPoint(0, 0);
-	private var touchDownSpace = new FlxPoint(0,0);
+	private var touchDownSpace = new FlxPoint(0, 0);
+	private var selectedText: FlxText;
 
 	public function new() {
 		super();
+		
+		var black = new FlxSprite(0, FlxG.height-17);
+		black.makeGraphic( 320, 18, FlxColor.BLACK );
+		black.alpha = 0.7;
+		black.scrollFactor.set(0, 0);
+		add( black );
+		
+		selectedText = new FlxText( 0, 0, 0, "Nothing selected." );
+		selectedText.setFormat("assets/fonts/RiskofRainFont.ttf", 8, 0xFFFFFF, "center");
+		selectedText.setPosition( FlxG.width - selectedText.textField.textWidth - 10, FlxG.height - 16 );
+		selectedText.scrollFactor.set(0, 0);
+		add(selectedText);
 	}
 	
 	override public function update() {
 		super.update();
 		
 		doSelection();
+		
+		if ( selectedEntities.length > 0 ) {
+			selectedText.text = selectedEntities[0].name;
+		} else {
+			selectedText.text = "Nothing selected.";
+		}
+		
+		selectedText.setPosition( FlxG.width - selectedText.textField.textWidth - 10, FlxG.height - 16 );
 	}
 	
 	public function singleselect( entity: SelectableEntity ) {
@@ -182,9 +204,10 @@ class SelectionSystem extends FlxGroup {
 				if ( target != null )
 					ent.attackCommand( target );
 			}
-
-			if( success )
-				wipeselection();
+			
+			// Uncomment below lines to enable deselection after a move
+			//if( success )
+				//wipeselection();
 		}
 	}
 	
