@@ -8,6 +8,8 @@ import SelectionSystem;
 import PlayState;
 import LevelManager;
 import flixel.tweens.FlxEase;
+import flixel.effects.particles.FlxEmitter;
+import flixel.effects.particles.FlxParticle;
 
 class MovementArrow extends FlxSprite {
 	
@@ -103,20 +105,38 @@ class MoveableEntity extends SelectableEntity {
 }
 
 class Orb extends MoveableEntity {
+	var emitter : FlxEmitter;
+	
 	public function new( x: Float, y: Float ) {
-		super(x, y, "assets/images/DroneDefault.png", "Orb", new FlxPoint( -8, 0), 12);
+		super(x, y, "assets/images/DroneDefault.png", "Enactment Orb", new FlxPoint( -8, 0), 12);
 		loadGraphic("assets/images/DroneSheet.png", true, 16, 16);
 		
 		animation.add("d", [0, 1, 2]);
 		animation.add("l", [3, 4, 5]);
 		animation.add("r", [6, 7, 8]);
 		animation.add("u", [9, 10, 11]);
+		
+		emitter = new FlxEmitter(0, 0);
+		emitter.makeParticles("assets/images/particles.png", 40, 16, true);
+		
+		emitter.setXSpeed( 0, 0 );
+		emitter.setYSpeed( 0, 0 );
+		emitter.setAlpha( 0.6, 0.8, 0.0, 0.0 );
+		emitter.setRotation( 0, 0 );
 	}
 	
 	override public function update() {
 		super.update();
 		
+		emitter.update();
+		emitter.x = this.x;
+		emitter.y = this.y;
+		
 		if ( moving ) {
+			
+			if ( !emitter.on ) 
+				emitter.start(false, 5, 0.15);
+			
 			this.set_angle(0);
 			switch(currentDirection) {
 				case 0: animation.play("r");
@@ -130,7 +150,13 @@ class Orb extends MoveableEntity {
 			}
 		} else {
 			animation.pause();
+			emitter.on = false;
 		}
+	}
+	
+	override public function draw() {
+		emitter.draw();
+		super.draw();
 	}
 }
 
