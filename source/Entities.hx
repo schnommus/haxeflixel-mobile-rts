@@ -1,6 +1,7 @@
 package;
 
 import flixel.FlxSprite;
+import flixel.text.FlxText;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxPoint;
 import flixel.util.FlxMath;
@@ -10,6 +11,8 @@ import LevelManager;
 import flixel.tweens.FlxEase;
 import flixel.effects.particles.FlxEmitter;
 import flixel.effects.particles.FlxParticle;
+import flixel.FlxG;
+import Math;
 
 class MovementArrow extends FlxSprite {
 	
@@ -160,14 +163,78 @@ class Orb extends MoveableEntity {
 	}
 }
 
-class Cactus extends SelectableEntity {
+class UpText extends FlxText {
 	
-	public function new( x: Float, y: Float ) {
-		super(x, y, "assets/images/cactus.png", "Cactus", new FlxPoint(-8, 0), 8);
+	var tweener : FlxTween;
+	
+	public function new( s: String, x: Float, y: Float ) {
+		super( x, y+10, 0, s);
+		super.setFormat("assets/fonts/MiniKylie.ttf", 8, 0xFFFFFF);
+		this.offset.x += this.textField.textWidth / 2 - 5;
+		this.offset.y += 15;
+		
+		tweener = FlxTween.tween( this, { x: x + Std.random(6) - 2, y: y - 10 }, 0.5, {ease: FlxEase.cubeOut} );
 	}
 	
 	override public function update() {
 		super.update();
+		alpha = 1 - tweener.percent;
+		
+		if ( tweener.finished ) 
+			this.kill();
+	}
+	
+}
+
+class DownText extends FlxText {
+	
+	var tweener : FlxTween;
+	
+	public function new( s: String, x: Float, y: Float ) {
+		super( x-15, y+15, 0, s);
+		super.setFormat("assets/fonts/MiniKylie.ttf", 8, 0xFF0000);
+		this.offset.x += this.textField.textWidth / 2 - 5;
+		this.offset.y += 40;
+		
+		tweener = FlxTween.tween( this, { x: this.x + Std.random(6) - 2, y: this.y+20 }, 0.5, {ease: FlxEase.cubeOut} );
+	}
+	
+	override public function update() {
+		super.update();
+		alpha = 1-tweener.percent;
+		
+		if ( tweener.finished ) 
+			this.kill();
+	}
+	
+}
+
+class Cactus extends SelectableEntity {
+	var period: Float = 20;
+	var delta: Float;
+	var delta2: Float;
+	
+	
+	public function new( x: Float, y: Float ) {
+		super(x, y, "assets/images/cactus.png", "Cactus", new FlxPoint( -8, 0), 8);
+		delta = 0.1 * Std.random(Std.int(period));
+		delta2 = 0.1 * Std.random(Std.int(period*2));
+	}
+	
+	override public function update() {
+		super.update();
+		
+		delta += FlxG.elapsed;
+		if ( delta > period/10 ) {
+			PlayState.levelManager.add(new UpText("O2", x, y) );
+			delta = 0.1*Std.random(Std.int(period/2));
+		}
+		
+		delta2 += FlxG.elapsed;
+		if ( delta2 > 2*period/10 ) {
+			PlayState.levelManager.add(new DownText("CO2", x, y) );
+			delta2 = 0.1*Std.random(Std.int(period/4));
+		}
 	}
 }
 
